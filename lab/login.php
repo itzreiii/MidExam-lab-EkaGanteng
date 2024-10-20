@@ -43,16 +43,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Online To-Do List</title>
-    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <h1>Login</h1>
-    <?php if ($error) echo "<p class='error'>$error</p>"; ?>
-    <form method="POST" action="">
-        <input type="text" name="username" placeholder="Username" required>
-        <input type="password" name="password" placeholder="Password" required>
-        <button type="submit">Login</button>
-    </form>
-    <p>Don't have an account? <a href="register.php">Register</a></p>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
+        <h1 class="text-2xl font-bold text-gray-700 text-center mb-6">Login</h1>
+
+        <?php if ($error) echo "<p class='text-red-500 text-center mb-4'>$error</p>"; ?>
+
+        <form method="POST" action="" class="space-y-4">
+            <input type="text" name="username" placeholder="Username" required
+                class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200">
+
+            <input type="password" name="password" placeholder="Password" required
+                class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200">
+
+            <button type="submit"
+                class="w-full bg-blue-500 text-white py-3 rounded-lg font-medium hover:bg-blue-600 transition duration-200">Login</button>
+        </form>
+
+        <p class="text-center text-gray-600 mt-4">Don't have an account? 
+            <a href="register.php" class="text-blue-500 hover:underline">Register</a>
+        </p>
+    </div>
 </body>
 </html>

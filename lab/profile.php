@@ -56,29 +56,58 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile - Online To-Do List</title>
-    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <h1>User Profile</h1>
-    <nav>
-        <a href="dashboard.php">Dashboard</a>
-        <a href="logout.php">Logout</a>
-    </nav>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="w-full max-w-lg bg-white p-8 rounded-lg shadow-lg">
+        <h1 class="text-2xl font-bold text-gray-700 text-center mb-6">User Profile</h1>
 
-    <?php if ($error) echo "<p class='error'>$error</p>"; ?>
-    <?php if ($success) echo "<p class='success'>$success</p>"; ?>
+        <?php if ($error): ?>
+            <p class="text-red-500 text-center mb-4"><?php echo $error; ?></p>
+        <?php endif; ?>
+        
+        <?php if ($success): ?>
+            <p class="text-green-500 text-center mb-4"><?php echo $success; ?></p>
+        <?php endif; ?>
 
-    <form method="POST" action="">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($user['username']); ?>" required>
+        <form method="POST" action="" class="space-y-4">
+            <div>
+                <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+                <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($user['username']); ?>" required
+                    class="mt-1 p-3 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200">
+            </div>
 
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>" required>
+            <div>
+                <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>" required
+                    class="mt-1 p-3 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200">
+            </div>
 
-        <label for="new_password">New Password (leave blank to keep current password):</label>
-        <input type="password" id="new_password" name="new_password">
+            <div>
+                <label for="new_password" class="block text-sm font-medium text-gray-700">New Password (optional)</label>
+                <input type="password" id="new_password" name="new_password"
+                    class="mt-1 p-3 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200">
+            </div>
 
-        <button type="submit">Update Profile</button>
-    </form>
+            <button type="submit"
+                class="w-full bg-blue-500 text-white py-3 rounded-lg font-medium hover:bg-blue-600 transition duration-200">
+                Update Profile
+            </button>
+        </form>
+
+        <div class="mt-6 flex justify-between">
+            <a href="dashboard.php" class="w-1/2 mr-1">
+                <button class="w-full bg-green-500 text-white py-3 rounded-lg font-medium hover:bg-green-600 transition duration-200">
+                    Dashboard
+                </button>
+            </a>
+            <a href="logout.php" class="w-1/2 ml-1">
+                <button class="w-full bg-red-500 text-white py-3 rounded-lg font-medium hover:bg-red-600 transition duration-200">
+                    Logout
+                </button>
+            </a>
+        </div>
+    </div>
 </body>
 </html>
+
