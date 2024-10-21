@@ -143,7 +143,6 @@ $avatar_url = 'img/tasks.png';
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <?php foreach ($tasks as $task): ?>
                 <div class="bg-white p-4 rounded-lg shadow-md flex justify-between items-center transition duration-200 hover:shadow-lg">
-                    <!-- Remove form submission for the toggle task -->
                     <input type="checkbox" data-task-id="<?php echo $task['id']; ?>" class="toggle-checkbox mr-2 h-5 w-5 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" <?php echo $task['completed'] ? 'checked' : ''; ?>>
                     <span class="<?php echo $task['completed'] ? 'line-through text-gray-400' : 'text-gray-800'; ?> text-lg flex-1">
                         <?php echo htmlspecialchars($task['title']); ?>
@@ -156,6 +155,7 @@ $avatar_url = 'img/tasks.png';
             <?php endforeach; ?>
         </div>
 
+
     </div>
 
     <script>
@@ -165,11 +165,21 @@ $avatar_url = 'img/tasks.png';
             menu.classList.toggle('hidden');
         });
 
-        // Handle task completion toggle via AJAX
+        // Handle task completion toggle via AJAX and update task title style
         document.querySelectorAll('.toggle-checkbox').forEach(function(checkbox) {
             checkbox.addEventListener('change', function() {
                 const taskId = this.getAttribute('data-task-id');
                 const isCompleted = this.checked ? 1 : 0;
+                const taskTitleElement = this.closest('div').querySelector('span');
+
+                // Update task title style based on completion status in real-time
+                if (isCompleted) {
+                    taskTitleElement.classList.add('line-through', 'text-gray-400');
+                    taskTitleElement.classList.remove('text-gray-800');
+                } else {
+                    taskTitleElement.classList.remove('line-through', 'text-gray-400');
+                    taskTitleElement.classList.add('text-gray-800');
+                }
 
                 // Create form data to send to the server
                 const formData = new FormData();
@@ -183,9 +193,7 @@ $avatar_url = 'img/tasks.png';
                 })
                 .then(response => response.json())
                 .then(data => {
-                    if (data.success) {
-                        console.log('Task updated successfully');
-                    } else {
+                    if (!data.success) {
                         console.error('Failed to update task');
                     }
                 })
