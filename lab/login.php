@@ -17,13 +17,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (empty($username) || empty($password)) {
         $error = "Both username and password are required.";
     } else {
-        $query = "SELECT id, username, password FROM users WHERE username = ?";
+        $query = "SELECT id, username, password, account_activation_hash FROM users WHERE username = ?";
         $stmt = mysqli_prepare($conn, $query);
         mysqli_stmt_bind_param($stmt, "s", $username);
         mysqli_stmt_execute($stmt);
         $result = mysqli_stmt_get_result($stmt);
+        $user = mysqli_fetch_assoc($result);
 
-        if ($user = mysqli_fetch_assoc($result)) {
+        if ($user && $user['account_activation_hash'] === null) {
             if (verify_password($password, $user['password'])) {
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['username'] = $user['username'];
@@ -31,6 +32,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             } else {
                 $error = "Invalid username or password.";
             }
+        } elseif ($user['account_activation_hash'] != null) {
+            $error = "Silahkan verifikasi akun terlebih dahulu.";
         } else {
             $error = "Invalid username or password.";
         }

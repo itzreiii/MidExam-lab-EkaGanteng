@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 20, 2024 at 05:11 AM
+-- Generation Time: Oct 21, 2024 at 06:10 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -35,6 +35,15 @@ CREATE TABLE `tasks` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `tasks`
+--
+
+INSERT INTO `tasks` (`id`, `list_id`, `title`, `completed`, `created_at`) VALUES
+(7, 2, 'gg', 0, '2024-10-21 09:11:22'),
+(8, 2, 'hhgg', 0, '2024-10-21 09:11:23'),
+(9, 2, 'hghgg', 0, '2024-10-21 09:11:25');
+
 -- --------------------------------------------------------
 
 --
@@ -48,6 +57,13 @@ CREATE TABLE `todo_lists` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `todo_lists`
+--
+
+INSERT INTO `todo_lists` (`id`, `user_id`, `title`, `created_at`) VALUES
+(2, 1, 'hgfhfhfhfhg', '2024-10-21 09:11:08');
+
 -- --------------------------------------------------------
 
 --
@@ -59,8 +75,17 @@ CREATE TABLE `users` (
   `username` varchar(50) NOT NULL,
   `email` varchar(100) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `account_activation_hash` varchar(64) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `username`, `email`, `password`, `created_at`, `account_activation_hash`) VALUES
+(1, 'rafpo', '1@1.com', '$2y$10$CXYCcRa9wfB0IP6y8bkoMe3f01lZkUlBY3AiQvb.j.JPz/bgaTzKW', '2024-10-21 07:01:15', NULL),
+(20, 'qwe', 'zoom.elraffs2@gmail.com', '$2y$10$A4.AGpAIMZodLhjbUVIDB.vbvNkh4nUT4nJS5Y4.T0LQIZSrvynQS', '2024-10-21 16:09:39', NULL);
 
 --
 -- Indexes for dumped tables
@@ -86,7 +111,8 @@ ALTER TABLE `todo_lists`
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `username` (`username`),
-  ADD UNIQUE KEY `email` (`email`);
+  ADD UNIQUE KEY `email` (`email`),
+  ADD UNIQUE KEY `account_activation_hash` (`account_activation_hash`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -96,19 +122,19 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `tasks`
 --
 ALTER TABLE `tasks`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `todo_lists`
 --
 ALTER TABLE `todo_lists`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- Constraints for dumped tables

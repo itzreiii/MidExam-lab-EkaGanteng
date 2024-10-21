@@ -12,4 +12,5 @@ if (!$conn) {
 }
 
 session_start();
+return $conn;
 ?>

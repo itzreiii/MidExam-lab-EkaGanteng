@@ -11,6 +11,10 @@ if (is_logged_in()) {
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $activation_token = bin2hex(random_bytes(16));
+
+    $activation_token_hash = hash("sha256", $activation_token);
+
     $username = sanitize_input($_POST['username']);
     $email = sanitize_input($_POST['email']);
     $password = sanitize_input($_POST['password']);
@@ -19,14 +23,42 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $error = "All fields are required.";
     } else {
         $hashed_password = hash_password($password);
-        $query = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
+        $query = "INSERT INTO users (username, email, password, account_activation_hash) VALUES (?, ?, ?, ?)";
         $stmt = mysqli_prepare($conn, $query);
-        mysqli_stmt_bind_param($stmt, "sss", $username, $email, $hashed_password);
+        mysqli_stmt_bind_param($stmt, "ssss", $username, $email, $hashed_password, $activation_token_hash);
 
         if (mysqli_stmt_execute($stmt)) {
-            $_SESSION['user_id'] = mysqli_insert_id($conn);
-            $_SESSION['username'] = $username;
-            redirect('dashboard.php');
+            $mail = require __DIR__ . "/mailer.php";
+
+            $mail->setFrom("noreply@example.com");
+            $mail->addAddress($_POST['email']);
+            $mail->Subject = "Account Activation";
+
+            // KALO UDA DIHOSTING, LINK HREF DISINI DIGANTI
+            $mail->Body = <<<END
+
+            Click <a href="http://localhost/uts/webprog-lab/lab/activate-account.php?token=$activation_token">here</a> 
+            to activate your account.
+
+            END;
+
+            try {
+
+                $mail->send();
+
+            } catch (Exception $e) {
+
+                echo "Message could not be sent. Mailer error: {$mail->ErrorInfo}";
+                exit;
+
+            }
+
+            echo "<script>alert('Registrasi berhasil. Silahkan cek email anda dan lakukan verifikasi email.');</script>";
+
+
+            // $_SESSION['user_id'] = mysqli_insert_id($conn);
+            // $_SESSION['username'] = $username;
+            // redirect('dashboard.php');
         } else {
             $error = "Registration failed. Please try again.";
         }
