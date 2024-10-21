@@ -3,7 +3,7 @@ require_once 'config.php';
 require_once 'functions.php';
 
 if (!is_logged_in()) {
-    redirect('login.php');
+    redirect('index.php');
 }
 
 $user_id = $_SESSION['user_id'];
