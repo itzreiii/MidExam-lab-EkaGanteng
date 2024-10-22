@@ -1,37 +1,42 @@
 <?php
 
-$token = $_GET["token"];
+// Get the token from the URL
+if (!isset($_GET["token"])) {
+    die("Invalid activation link.");
+}
 
+$token = $_GET["token"];
 $token_hash = hash("sha256", $token);
 
-$mysqli = require __DIR__ . "\config.php";
+// Database connection
+$mysqli = require __DIR__ . "/config.php";
 
-$sql = "SELECT * FROM users
-        WHERE account_activation_hash = ?";
+// Prepare and execute the SQL statement to find the user by token
+$sql = "SELECT id FROM users WHERE account_activation_hash = ?";
 
 $stmt = $mysqli->prepare($sql);
-
 $stmt->bind_param("s", $token_hash);
-
 $stmt->execute();
-
 $result = $stmt->get_result();
-
 $user = $result->fetch_assoc();
 
 if ($user === null) {
-    die("token not found");
+    die("Invalid or expired token.");
 }
 
-$sql = "UPDATE users
-        SET account_activation_hash = NULL
-        WHERE id = ?";
-
+// Update the user to remove the activation hash
+$sql = "UPDATE users SET account_activation_hash = NULL WHERE id = ?";
 $stmt = $mysqli->prepare($sql);
+$stmt->bind_param("i", $user["id"]);
 
-$stmt->bind_param("s", $user["id"]);
+if ($stmt->execute()) {
+    // Success: account activated
+    $success = true;
+} else {
+    // Failed to update the account
+    die("Failed to activate account. Please try again.");
+}
 
-$stmt->execute();
 ?>
 <!DOCTYPE html>
 <html>
@@ -42,12 +47,11 @@ $stmt->execute();
 </head>
 <body>
 
-    <h1>Account acivated</h1>
+    <h1>Account activated</h1>
 
-    <p>Akun berhasil di aktivasi! Silahkan 
-        <a href="login.php">login</a>
-        ke akun anda.
-    </p>
+    <?php if ($success): ?>
+        <p>Your account has been successfully activated! You can now <a href="login.php">login</a>.</p>
+    <?php endif; ?>
 
 </body>
 </html>

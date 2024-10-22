@@ -1,5 +1,3 @@
-
-<!-- register.php -->
 <?php
 require_once 'config.php';
 require_once 'functions.php';
@@ -12,9 +10,7 @@ $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $activation_token = bin2hex(random_bytes(16));
-
     $activation_token_hash = hash("sha256", $activation_token);
-
     $username = sanitize_input($_POST['username']);
     $email = sanitize_input($_POST['email']);
     $password = sanitize_input($_POST['password']);
@@ -31,34 +27,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $mail = require __DIR__ . "/mailer.php";
 
             $mail->setFrom("noreply@example.com");
-            $mail->addAddress($_POST['email']);
+            $mail->addAddress($email);
             $mail->Subject = "Account Activation";
-
-            // KALO UDA DIHOSTING, LINK HREF DISINI DIGANTI
             $mail->Body = <<<END
-
-            Click <a href="http://localhost/uts/webprog-lab/lab/activate-account.php?token=$activation_token">here</a> 
-            to activate your account.
-
+            Click <a href="http://localhost/uts/webprog-lab/lab/activate-account.php?token=$activation_token">here</a> to activate your account.
             END;
 
             try {
-
                 $mail->send();
-
+                echo "<script>document.getElementById('registerForm').reset();</script>"; // Clear form after successful registration
+                echo "<script>alert('Registration successful. Please check your email for verification.');</script>";
             } catch (Exception $e) {
-
                 echo "Message could not be sent. Mailer error: {$mail->ErrorInfo}";
                 exit;
-
             }
-
-            echo "<script>alert('Registrasi berhasil. Silahkan cek email anda dan lakukan verifikasi email.');</script>";
-
-
-            // $_SESSION['user_id'] = mysqli_insert_id($conn);
-            // $_SESSION['username'] = $username;
-            // redirect('dashboard.php');
         } else {
             $error = "Registration failed. Please try again.";
         }
@@ -72,6 +54,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register - Online To-Do List</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Optional: Clear the form fields on page load
+        window.onload = function() {
+            document.getElementById("registerForm").reset();
+        };
+    </script>
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
     <div class="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
@@ -79,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         
         <?php if ($error) echo "<p class='text-red-500 text-center mb-4'>$error</p>"; ?>
 
-        <form method="POST" action="" class="space-y-4">
+        <form id="registerForm" method="POST" action="" class="space-y-4">
             <input type="text" name="username" placeholder="Username" required
                 class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200">
 
@@ -99,4 +87,3 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </div>
 </body>
 </html>
-

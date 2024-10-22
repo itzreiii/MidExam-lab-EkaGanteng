@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 21, 2024 at 06:10 PM
+-- Generation Time: Oct 22, 2024 at 02:46 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `todo_list_db`
+-- Database: `web_lab`
 --
 
 -- --------------------------------------------------------
@@ -76,16 +76,19 @@ CREATE TABLE `users` (
   `email` varchar(100) NOT NULL,
   `password` varchar(255) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `account_activation_hash` varchar(64) DEFAULT NULL
+  `account_activation_hash` varchar(64) DEFAULT NULL,
+  `password_reset_hash` varchar(64) DEFAULT NULL,
+  `password_reset_expires` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `email`, `password`, `created_at`, `account_activation_hash`) VALUES
-(1, 'rafpo', '1@1.com', '$2y$10$CXYCcRa9wfB0IP6y8bkoMe3f01lZkUlBY3AiQvb.j.JPz/bgaTzKW', '2024-10-21 07:01:15', NULL),
-(20, 'qwe', 'zoom.elraffs2@gmail.com', '$2y$10$A4.AGpAIMZodLhjbUVIDB.vbvNkh4nUT4nJS5Y4.T0LQIZSrvynQS', '2024-10-21 16:09:39', NULL);
+INSERT INTO `users` (`id`, `username`, `email`, `password`, `created_at`, `account_activation_hash`, `password_reset_hash`, `password_reset_expires`) VALUES
+(1, 'rafpo', '1@1.com', '$2y$10$CXYCcRa9wfB0IP6y8bkoMe3f01lZkUlBY3AiQvb.j.JPz/bgaTzKW', '2024-10-21 07:01:15', NULL, NULL, NULL),
+(20, 'qwe', 'zoom.elraffs2@gmail.com', '$2y$10$A4.AGpAIMZodLhjbUVIDB.vbvNkh4nUT4nJS5Y4.T0LQIZSrvynQS', '2024-10-21 16:09:39', NULL, NULL, NULL),
+(25, 'ray1', 'raymussenaw@gmail.com', '$2y$10$jjRKJ8lsme6nLUnN3WBCoupsUJcxLy.QcV2wMjd2bRZbZnzh5esdC', '2024-10-22 00:31:15', NULL, NULL, NULL);
 
 --
 -- Indexes for dumped tables
@@ -134,7 +137,7 @@ ALTER TABLE `todo_lists`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- Constraints for dumped tables

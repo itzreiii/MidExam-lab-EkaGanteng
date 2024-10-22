@@ -1,5 +1,3 @@
-
-<!-- login.php -->
 <?php
 require_once 'config.php';
 require_once 'functions.php';
@@ -9,6 +7,7 @@ if (is_logged_in()) {
 }
 
 $error = '';
+$show_forgot_password = false; // Flag to show "Forgot your password?" link
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = sanitize_input($_POST['username']);
@@ -28,14 +27,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if (verify_password($password, $user['password'])) {
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['username'] = $user['username'];
+                echo "<script>document.getElementById('loginForm').reset();</script>"; // Clear form after successful login
                 redirect('dashboard.php');
             } else {
                 $error = "Invalid username or password.";
+                $show_forgot_password = true;  // Show "Forgot password" after wrong attempt
             }
         } elseif ($user['account_activation_hash'] != null) {
-            $error = "Silahkan verifikasi akun terlebih dahulu.";
+            $error = "Please verify your account first.";
         } else {
             $error = "Invalid username or password.";
+            $show_forgot_password = true;  // Show "Forgot password" if the user doesn't exist or wrong credentials
         }
     }
 }
@@ -47,6 +49,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Online To-Do List</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Optional: Clear the form fields on page load
+        window.onload = function() {
+            document.getElementById("loginForm").reset();
+        };
+    </script>
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
     <div class="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
@@ -54,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <?php if ($error) echo "<p class='text-red-500 text-center mb-4'>$error</p>"; ?>
 
-        <form method="POST" action="" class="space-y-4">
+        <form id="loginForm" method="POST" action="" class="space-y-4">
             <input type="text" name="username" placeholder="Username" required
                 class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200">
 
@@ -68,6 +76,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <p class="text-center text-gray-600 mt-4">Don't have an account? 
             <a href="register.php" class="text-blue-500 hover:underline">Register</a>
         </p>
+
+        <?php if ($show_forgot_password): ?>
+            <p class="text-center text-red-600 mt-4">
+                <a href="forgot-password.php" class="text-blue-500 hover:underline">Forgot your password?</a>
+            </p>
+        <?php endif; ?>
     </div>
 </body>
 </html>
