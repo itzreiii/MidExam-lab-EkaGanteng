@@ -9,15 +9,15 @@ if (!is_logged_in()) {
     redirect('login.php');
 }
 
-// Default avatar URL (this can be replaced with a dynamic URL if you have user-specific avatars)
-$avatar_url = 'img/user.jpg'; // Replace with actual image URL if available
+// Get avatar URL from session or set default
+$avatar_url = isset($_SESSION['avatar_url']) ? $_SESSION['avatar_url'] : 'img/user.jpg';
 $username = isset($_SESSION['username']) ? htmlspecialchars($_SESSION['username']) : 'User';
 ?>
-<header class="bg-blue-600 text-white shadow-md py-4">
+<header class="bg-blue-600 text-white shadow-md py-3">
     <div class="container mx-auto flex justify-between items-center px-6">
         <!-- Left: User Welcome & Avatar -->
         <div class="flex items-center space-x-6">
-            <img src="<?php echo $avatar_url; ?>" alt="User Avatar" class="w-10 h-10 rounded-full">
+            <img src="<?php echo $avatar_url; ?>" alt="User Avatar" class="w-14 h-14 rounded-full mx-auto mb-0">
             <h1 class="text-lg font-bold">Welcome, <?php echo $username; ?>!</h1>
         </div>
 
@@ -43,14 +43,3 @@ $username = isset($_SESSION['username']) ? htmlspecialchars($_SESSION['username'
         <a href="logout.php" class="block py-2 text-white hover:underline">Logout</a>
     </nav>
 </header>
-
-<script>
-    // Toggle mobile menu visibility
-    document.getElementById('mobile-menu-button').addEventListener('click', function() {
-        const menu = document.getElementById('mobile-menu');
-        const isExpanded = this.getAttribute('aria-expanded') === 'true';
-
-        menu.classList.toggle('hidden');
-        this.setAttribute('aria-expanded', !isExpanded);
-    });
-</script>

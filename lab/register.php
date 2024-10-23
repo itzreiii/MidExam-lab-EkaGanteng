@@ -14,10 +14,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = sanitize_input($_POST['username']);
     $email = sanitize_input($_POST['email']);
     $password = sanitize_input($_POST['password']);
+    $confirm_password = sanitize_input($_POST['confirm_password']);
 
-    if (empty($username) || empty($email) || empty($password)) {
+    // Validate input fields
+    if (empty($username) || empty($email) || empty($password) || empty($confirm_password)) {
         $error = "All fields are required.";
+    } elseif ($password !== $confirm_password) {
+        $error = "Passwords do not match.";
     } else {
+        // Hash the password
         $hashed_password = hash_password($password);
         $query = "INSERT INTO users (username, email, password, account_activation_hash) VALUES (?, ?, ?, ?)";
         $stmt = mysqli_prepare($conn, $query);
@@ -30,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $mail->addAddress($email);
             $mail->Subject = "Account Activation";
             $mail->Body = <<<END
-            Click <a href="http://localhost/uts/webprog-lab/lab/activate-account.php?token=$activation_token">here</a> to activate your account.
+            Click <a href="http://localhost/webprog-lab/lab/activate-account.php?token=$activation_token">here</a> to activate your account.
             END;
 
             try {
@@ -47,6 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -55,10 +61,44 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <title>Register - Online To-Do List</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        // Optional: Clear the form fields on page load
-        window.onload = function() {
-            document.getElementById("registerForm").reset();
-        };
+        function checkPasswordStrength(password) {
+            const strengthIndicator = document.getElementById("password-strength");
+            const strengthBar = document.getElementById("strength-bar");
+            let strength = "Weak";
+
+            // Check password length
+            if (password.length >= 8) {
+                strength = "Strong";
+                strengthBar.style.width = "100%";
+                strengthBar.className = "bg-green-500";
+            } else {
+                strength = "Weak";
+                strengthBar.style.width = "25%";
+                strengthBar.className = "bg-red-500";
+            }
+
+            strengthIndicator.textContent = strength;
+        }
+
+        function validateConfirmPassword() {
+            const password = document.getElementById("password").value;
+            const confirmPassword = document.getElementById("confirm_password").value;
+            const confirmPasswordIndicator = document.getElementById("confirm-password-error");
+            const confirmPasswordBar = document.getElementById("confirm-password-bar");
+
+            if (password !== confirmPassword) {
+                confirmPasswordIndicator.textContent = "Passwords do not match.";
+                confirmPasswordIndicator.classList.add("text-red-500");
+                confirmPasswordBar.style.width = "100%";
+                confirmPasswordBar.className = "bg-red-500";
+            } else {
+                confirmPasswordIndicator.textContent = "Passwords match!";
+                confirmPasswordIndicator.classList.remove("text-red-500");
+                confirmPasswordIndicator.classList.add("text-green-500");
+                confirmPasswordBar.style.width = "100%";
+                confirmPasswordBar.className = "bg-green-500";
+            }
+        }
     </script>
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
@@ -74,8 +114,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <input type="email" name="email" placeholder="Email" required
                 class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200">
 
-            <input type="password" name="password" placeholder="Password" required
+            <input type="password" id="password" name="password" placeholder="Password" required
+                onkeyup="checkPasswordStrength(this.value)"
                 class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200">
+
+            <div class="w-full bg-gray-200 rounded-full h-2 mb-2">
+                <div id="strength-bar" class="h-2 rounded-full"></div>
+            </div>
+            <p id="password-strength" class="text-sm mt-1"></p>
+
+            <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm Password" required
+                onkeyup="validateConfirmPassword()"
+                class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200">
+
+            <div class="w-full bg-gray-200 rounded-full h-2 mb-2">
+                <div id="confirm-password-bar" class="h-2 rounded-full"></div>
+            </div>
+            <p id="confirm-password-error" class="text-sm mt-1"></p>
 
             <button type="submit"
                 class="w-full bg-blue-500 text-white py-3 rounded-lg font-medium hover:bg-blue-600 transition duration-200">Register</button>

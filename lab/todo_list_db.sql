@@ -139,6 +139,9 @@ ALTER TABLE `todo_lists`
 ALTER TABLE `users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
+  ALTER TABLE users ADD avatar_url VARCHAR(255) DEFAULT 'img/user.jpg';
+
+
 --
 -- Constraints for dumped tables
 --
