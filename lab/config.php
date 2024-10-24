@@ -1,6 +1,11 @@
 <!-- config.php -->
 <?php
 define('DB_HOST', 'localhost');
+
+// define('DB_USER', 'u979249421_todo_list_db');
+// define('DB_PASS', 'Todolist94709');
+// define('DB_NAME', 'u979249421_todo_list_db');
+
 define('DB_USER', 'root');
 define('DB_PASS', '');
 define('DB_NAME', 'todo_list_db');

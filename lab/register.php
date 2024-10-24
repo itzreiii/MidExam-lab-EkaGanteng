@@ -34,6 +34,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $mail->setFrom("noreply@example.com");
             $mail->addAddress($email);
             $mail->Subject = "Account Activation";
+            // $mail->Body = <<<END
+            // Click <a href="https://darkslategray-woodpecker-113089.hostingersite.com/activate-account.php?token=$activation_token">here</a> to activate your account.
+            // END;
             $mail->Body = <<<END
             Click <a href="http://localhost/webprog-lab/lab/activate-account.php?token=$activation_token">here</a> to activate your account.
             END;
