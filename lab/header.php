@@ -1,4 +1,6 @@
 <?php
+
+require_once('./config.php');
 // Start session if not already started
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -9,8 +11,32 @@ if (!is_logged_in()) {
     redirect('login.php');
 }
 
+// $query = "SELECT l.*, 
+//           (SELECT COUNT(*) FROM tasks t WHERE t.list_id = l.id) as task_count,
+//           (SELECT COUNT(*) FROM tasks t WHERE t.list_id = l.id AND t.completed = 1) as completed_count
+//           FROM todo_lists l WHERE l.user_id = ? ORDER BY l.created_at DESC";
+// $stmt = mysqli_prepare($conn, $query);
+// mysqli_stmt_bind_param($stmt, "i", $user_id);
+// mysqli_stmt_execute($stmt);
+// $result = mysqli_stmt_get_result($stmt);
+// $todo_lists = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+
+$user_id = $_SESSION['user_id'];
+
 // Get avatar URL from session or set default
-$avatar_url = isset($_SESSION['avatar_url']) ? $_SESSION['avatar_url'] : 'img/user.jpg';
+$get_avatar_query = "SELECT avatar_url FROM users WHERE id = ?";
+$stmt = mysqli_prepare($conn, $get_avatar_query);
+mysqli_stmt_bind_param($stmt, "s", $user_id);
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
+$temp_url = mysqli_fetch_assoc($result);
+$avatar_url = $temp_url['avatar_url'];
+
+if (!isset($avatar_url)) {
+    $avatar_url = 'img/user.jpg';
+}
+
 $username = isset($_SESSION['username']) ? htmlspecialchars($_SESSION['username']) : 'User';
 ?>
 <style>

@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             // Handle avatar upload if provided
             if (!empty($avatar['name'])) {
-                $allowed_types = ['image/jpeg', 'image/png', 'image/gif'];
+                $allowed_types = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg'];
                 if (in_array($avatar['type'], $allowed_types)) {
                     $upload_dir = 'uploads/avatars/';
                     if (!is_dir($upload_dir)) {

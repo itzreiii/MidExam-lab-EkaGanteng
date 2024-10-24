@@ -2,6 +2,8 @@
 require_once 'config.php';
 require_once 'functions.php';
 
+error_reporting(E_ERROR);
+
 if (is_logged_in()) {
     redirect('dashboard.php');
 }
@@ -79,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <?php if ($show_forgot_password): ?>
             <p class="text-center text-red-600 mt-4">
-                <a href="forgot-password.php" class="text-blue-500 hover:underline">Forgot your password?</a>
+                <a href="forgot_password.php" class="text-blue-500 hover:underline">Forgot your password?</a>
             </p>
         <?php endif; ?>
     </div>
