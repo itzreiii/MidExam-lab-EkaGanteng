@@ -86,38 +86,39 @@ $avatar_url = 'img/tasks.png';
 <body class="bg-gray-100">
 
     <!-- Header Section -->
-    <header class="bg-blue-600 text-white shadow-md py-4">
-        <div class="container mx-auto flex flex-col md:flex-row justify-between items-center px-6">
-            <!-- Left: User Welcome & Avatar -->
-            <div class="flex items-center space-x-4 mb-4 md:mb-0">
-                <img src="<?php echo $avatar_url; ?>" alt="User Avatar" class="w-10 h-10 square-full">
-                <h1 class="text-lg font-bold">Task Management for "<?php echo htmlspecialchars($list['title']); ?>"</h1>
-            </div>
-
-            <!-- Right: Navigation for large screens -->
-            <nav class="hidden md:flex space-x-6">
-                <a href="dashboard.php" class="hover:underline">Dashboard</a>
-                <a href="profile.php" class="hover:underline">Profile</a>
-                <a href="logout.php" class="hover:underline">Logout</a>
-            </nav>
-
-            <!-- Mobile Menu Button -->
-            <div class="md:hidden">
-                <button id="mobile-menu-button" class="text-white focus:outline-none">
-                    <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/>
-                    </svg>
-                </button>
-            </div>
+    <header class="bg-blue-600 text-white shadow-md py-3">
+    <div class="container mx-auto flex justify-between items-center px-6">
+        <!-- Left: User Welcome & Avatar -->
+        <div class="flex items-center space-x-6">
+            <img src="<?php echo $avatar_url; ?>" alt="User Avatar" class="w-14 h-14 rounded-full mx-auto mb-0">
+            <h1 class="text-lg font-bold">Task Management for "<?php echo htmlspecialchars($list['title']); ?>"</h1>
         </div>
 
-        <!-- Mobile Menu (hidden by default) -->
-        <nav id="mobile-menu" class="md:hidden bg-blue-500 px-4 py-2 hidden">
-            <a href="dashboard.php" class="block py-2 text-white hover:underline">Dashboard</a>
-            <a href="profile.php" class="block py-2 text-white hover:underline">Profile</a>
-            <a href="logout.php" class="block py-2 text-white hover:underline">Logout</a>
+        <!-- Right: Navigation for large screens -->
+        <nav class="hidden md:flex space-x-4">
+            <a href="dashboard.php" class=" nav-link">Dashboard</a>
+            <a href="profile.php" class=" nav-link">Profile</a>
+            <a href="logout.php" class=" nav-link">Logout</a>
         </nav>
-    </header>
+
+        <!-- Mobile Menu Button -->
+        <div class="md:hidden">
+            <button id="mobile-menu-button" class="text-white focus:outline-none" aria-expanded="false" aria-controls="mobile-menu">
+                <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile Menu (hidden by default) -->
+    <nav id="mobile-menu" class="md:hidden bg-blue-500 px-4 py-2 hidden">
+        <a href="dashboard.php" class="block py-2 text-white  nav-link">Dashboard</a>
+        <a href="profile.php" class="block py-2 text-white  nav-link">Profile</a>
+        <a href="logout.php" class="block py-2 text-white  nav-link">Logout</a>
+    </nav>
+</header>
+
 
     <div class="container mx-auto p-6">
         <h2 class="text-2xl font-bold text-gray-700 mb-4">Add a New Task</h2>
@@ -157,6 +158,66 @@ $avatar_url = 'img/tasks.png';
 
 
     </div>
+
+<style>
+    .nav-link {
+    position: relative;
+    padding: 5px 0; /* Optional padding for better click area */
+    color: white; /* Base color */
+    text-decoration: none; /* Remove underline */
+    transition: color 0.3s ease; /* Smooth transition for color change */
+}
+
+.nav-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 3px; /* Thickness of the underline */
+    width: 100%; /* Full width */
+    background-color: rgba(255, 255, 255, 0.7); /* Underline color */
+    transform: scaleX(0); /* Start hidden */
+    transition: transform 0.3s ease; /* Smooth transition for underline */
+}
+
+.nav-link:hover {
+    color: rgba(255, 255, 255, 0.9); /* Change color on hover */
+}
+
+.nav-link:focus,
+.nav-link:active {
+    color: rgba(255, 255, 255, 0.9); /* Keep color on focus/active */
+}
+
+/* Show the underline when hovered or focused */
+.nav-link:hover::after,
+.nav-link:focus::after {
+    transform: scaleX(1); /* Scale underline to full width */
+}
+
+/* New styles for task cards */
+.bg-white:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+button[name="delete_task"] {
+    transition: background-color 0.3s ease;
+}
+
+button[name="delete_task"]:hover {
+    background-color: rgba(255, 0, 0, 0.7); /* Slightly lighter red on hover */
+}
+
+.task-title {
+    transition: color 0.3s ease;
+}
+
+.bg-white:hover .task-title {
+    color: inherit; /* Keep the original color */
+}
+    
+
+</style>
 
     <script>
         // Toggle mobile menu visibility
