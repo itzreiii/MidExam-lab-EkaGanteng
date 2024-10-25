@@ -1,7 +1,7 @@
 <?php
 require_once 'config.php';
 require_once 'functions.php';
-
+include 'header.php';
 if (!is_logged_in()) {
     redirect('index.php');
 }
@@ -95,29 +95,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100">
-<header class="bg-blue-600 text-white shadow-md py-3">
-    <div class="container mx-auto flex justify-between items-center px-6">
-        <div class="flex items-center space-x-4">
-            <img src="<?php echo $_SESSION['avatar_url'] ?? 'img/user.jpg'; ?>" alt="User Avatar" class="w-12 h-12 rounded-full">
-            <h1 class="text-lg font-bold">Welcome, <?php echo $_SESSION['username']; ?>!</h1>
-        </div>
-        <nav class="hidden md:flex space-x-4">
-            <a href="dashboard.php" class="hover:underline">Dashboard</a>
-            <a href="logout.php" class="hover:underline">Logout</a>
-        </nav>
-        <div class="md:hidden">
-            <button id="mobile-menu-button" class="text-white focus:outline-none" aria-expanded="false" aria-controls="mobile-menu">
-                <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/>
-                </svg>
-            </button>
-        </div>
-    </div>
-    <nav id="mobile-menu" class="md:hidden bg-blue-500 px-4 py-2 hidden">
-        <a href="profile.php" class="block py-2 text-white hover:underline">Profile</a>
-        <a href="logout.php" class="block py-2 text-white hover:underline">Logout</a>
-    </nav>
-</header>
+
+
 
 <div class="container mx-auto p-6">
     <form method="POST" action="" enctype="multipart/form-data" class="bg-white shadow-md rounded-lg p-8 space-y-4">

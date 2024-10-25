@@ -87,6 +87,7 @@ $username = isset($_SESSION['username']) ? htmlspecialchars($_SESSION['username'
 
         <!-- Right: Navigation for large screens -->
         <nav class="hidden md:flex space-x-4">
+            <a href="dashboard.php" class="nav-link">Dashboard</a>
             <a href="profile.php" class="nav-link">Profile</a>
             <a href="logout.php" class="nav-link">Logout</a>
         </nav>
@@ -103,6 +104,7 @@ $username = isset($_SESSION['username']) ? htmlspecialchars($_SESSION['username'
 
     <!-- Mobile Menu (hidden by default) -->
     <nav id="mobile-menu" class="md:hidden bg-blue-500 px-4 py-2 hidden">
+        <a href="dashboard.php" class="block py-2 text-white nav-link">Dashboard</a>
         <a href="profile.php" class="block py-2 text-white nav-link">Profile</a>
         <a href="logout.php" class="block py-2 text-white nav-link">Logout</a>
     </nav>

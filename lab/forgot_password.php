@@ -33,8 +33,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $mail->addAddress($email);
             $mail->Subject = "Password Reset";
             
-            //$reset_link = "https://darkslategray-woodpecker-113089.hostingersite.com/reset_password.php?token=$reset_token";
-            $reset_link = "http://localhost/uts/webprog-lab/lab/reset_password.php?token=$reset_token";
+            $reset_link = "https://darkslategray-woodpecker-113089.hostingersite.com/reset_password.php?token=$reset_token";
+            // $reset_link = "http://localhost/webprog/webprog-lab/lab/reset_password.php?token=$reset_token";
             $mail->Body = <<<END
                 Click <a href="$reset_link">here</a> to reset your password. This link is valid for 1 hour.
                 END;

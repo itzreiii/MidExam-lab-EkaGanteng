@@ -77,47 +77,49 @@ $avatar_url = 'img/tasks.png';
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Task Management - <?php echo htmlspecialchars($list['title']); ?></title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body class="bg-gray-100">
 
     <!-- Header Section -->
     <header class="bg-blue-600 text-white shadow-md py-3">
-    <div class="container mx-auto flex justify-between items-center px-6">
-        <!-- Left: User Welcome & Avatar -->
-        <div class="flex items-center space-x-6">
-            <img src="<?php echo $avatar_url; ?>" alt="User Avatar" class="w-14 h-14 rounded-full mx-auto mb-0">
-            <h1 class="text-lg font-bold">Task Management for "<?php echo htmlspecialchars($list['title']); ?>"</h1>
+        <div class="container mx-auto flex justify-between items-center px-6">
+            <!-- Left: User Welcome & Avatar -->
+            <div class="flex items-center space-x-6">
+                <img src="<?php echo $avatar_url; ?>" alt="User Avatar" class="w-14 h-14 rounded-full mx-auto mb-0">
+                <h1 class="text-lg font-bold">Task Management for "<?php echo htmlspecialchars($list['title']); ?>"</h1>
+            </div>
+
+            <!-- Right: Navigation for large screens -->
+            <nav class="hidden md:flex space-x-4">
+                <a href="dashboard.php" class=" nav-link">Dashboard</a>
+                <a href="profile.php" class=" nav-link">Profile</a>
+                <a href="logout.php" class=" nav-link">Logout</a>
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <div class="md:hidden">
+                <button id="mobile-menu-button" class="text-white focus:outline-none" aria-expanded="false" aria-controls="mobile-menu">
+                    <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                    </svg>
+                </button>
+            </div>
         </div>
 
-        <!-- Right: Navigation for large screens -->
-        <nav class="hidden md:flex space-x-4">
-            <a href="dashboard.php" class=" nav-link">Dashboard</a>
-            <a href="profile.php" class=" nav-link">Profile</a>
-            <a href="logout.php" class=" nav-link">Logout</a>
+        <!-- Mobile Menu (hidden by default) -->
+        <nav id="mobile-menu" class="md:hidden bg-blue-500 px-4 py-2 hidden">
+            <a href="dashboard.php" class="block py-2 text-white  nav-link">Dashboard</a>
+            <a href="profile.php" class="block py-2 text-white  nav-link">Profile</a>
+            <a href="logout.php" class="block py-2 text-white  nav-link">Logout</a>
         </nav>
-
-        <!-- Mobile Menu Button -->
-        <div class="md:hidden">
-            <button id="mobile-menu-button" class="text-white focus:outline-none" aria-expanded="false" aria-controls="mobile-menu">
-                <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/>
-                </svg>
-            </button>
-        </div>
-    </div>
-
-    <!-- Mobile Menu (hidden by default) -->
-    <nav id="mobile-menu" class="md:hidden bg-blue-500 px-4 py-2 hidden">
-        <a href="dashboard.php" class="block py-2 text-white  nav-link">Dashboard</a>
-        <a href="profile.php" class="block py-2 text-white  nav-link">Profile</a>
-        <a href="logout.php" class="block py-2 text-white  nav-link">Logout</a>
-    </nav>
-</header>
+    </header>
 
 
     <div class="container mx-auto p-6">
@@ -127,10 +129,11 @@ $avatar_url = 'img/tasks.png';
             <button type="submit" name="add_task" class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-200">Add Task</button>
         </form>
 
+        <!-- Search and Filter Tasks -->
         <h2 class="text-2xl font-bold text-gray-700 mb-4">Search and Filter Tasks</h2>
-        <form method="GET" action="" class="mb-6 bg-white p-4 rounded-lg shadow-md flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2">
+        <form id="search-form" method="GET" action="" class="mb-6 bg-white p-4 rounded-lg shadow-md flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2">
             <input type="hidden" name="list_id" value="<?php echo $list_id; ?>">
-            <input type="text" name="search" placeholder="Search tasks..." value="<?php echo htmlspecialchars($search_term); ?>" class="flex-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <input id="search-input" type="text" name="search" placeholder="Search tasks..." value="<?php echo htmlspecialchars($search_term); ?>" class="flex-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
             <select name="filter" class="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <option value="all" <?php echo $filter == 'all' ? 'selected' : ''; ?>>All Tasks</option>
                 <option value="completed" <?php echo $filter == 'completed' ? 'selected' : ''; ?>>Completed Tasks</option>
@@ -138,6 +141,7 @@ $avatar_url = 'img/tasks.png';
             </select>
             <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-200">Search</button>
         </form>
+
 
         <h2 class="text-2xl font-bold text-gray-700 mb-4">Tasks</h2>
         <!-- Tasks Section -->
@@ -159,65 +163,77 @@ $avatar_url = 'img/tasks.png';
 
     </div>
 
-<style>
-    .nav-link {
-    position: relative;
-    padding: 5px 0; /* Optional padding for better click area */
-    color: white; /* Base color */
-    text-decoration: none; /* Remove underline */
-    transition: color 0.3s ease; /* Smooth transition for color change */
-}
+    <style>
+        .nav-link {
+            position: relative;
+            padding: 5px 0;
+            /* Optional padding for better click area */
+            color: white;
+            /* Base color */
+            text-decoration: none;
+            /* Remove underline */
+            transition: color 0.3s ease;
+            /* Smooth transition for color change */
+        }
 
-.nav-link::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    height: 3px; /* Thickness of the underline */
-    width: 100%; /* Full width */
-    background-color: rgba(255, 255, 255, 0.7); /* Underline color */
-    transform: scaleX(0); /* Start hidden */
-    transition: transform 0.3s ease; /* Smooth transition for underline */
-}
+        .nav-link::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            height: 3px;
+            /* Thickness of the underline */
+            width: 100%;
+            /* Full width */
+            background-color: rgba(255, 255, 255, 0.7);
+            /* Underline color */
+            transform: scaleX(0);
+            /* Start hidden */
+            transition: transform 0.3s ease;
+            /* Smooth transition for underline */
+        }
 
-.nav-link:hover {
-    color: rgba(255, 255, 255, 0.9); /* Change color on hover */
-}
+        .nav-link:hover {
+            color: rgba(255, 255, 255, 0.9);
+            /* Change color on hover */
+        }
 
-.nav-link:focus,
-.nav-link:active {
-    color: rgba(255, 255, 255, 0.9); /* Keep color on focus/active */
-}
+        .nav-link:focus,
+        .nav-link:active {
+            color: rgba(255, 255, 255, 0.9);
+            /* Keep color on focus/active */
+        }
 
-/* Show the underline when hovered or focused */
-.nav-link:hover::after,
-.nav-link:focus::after {
-    transform: scaleX(1); /* Scale underline to full width */
-}
+        /* Show the underline when hovered or focused */
+        .nav-link:hover::after,
+        .nav-link:focus::after {
+            transform: scaleX(1);
+            /* Scale underline to full width */
+        }
 
-/* New styles for task cards */
-.bg-white:hover {
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-}
+        /* New styles for task cards */
+        .bg-white:hover {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
 
-button[name="delete_task"] {
-    transition: background-color 0.3s ease;
-}
+        button[name="delete_task"] {
+            transition: background-color 0.3s ease;
+        }
 
-button[name="delete_task"]:hover {
-    background-color: rgba(255, 0, 0, 0.7); /* Slightly lighter red on hover */
-}
+        button[name="delete_task"]:hover {
+            background-color: rgba(255, 0, 0, 0.7);
+            /* Slightly lighter red on hover */
+        }
 
-.task-title {
-    transition: color 0.3s ease;
-}
+        .task-title {
+            transition: color 0.3s ease;
+        }
 
-.bg-white:hover .task-title {
-    color: inherit; /* Keep the original color */
-}
-    
-
-</style>
+        .bg-white:hover .task-title {
+            color: inherit;
+            /* Keep the original color */
+        }
+    </style>
 
     <script>
         // Toggle mobile menu visibility
@@ -225,6 +241,13 @@ button[name="delete_task"]:hover {
             const menu = document.getElementById('mobile-menu');
             menu.classList.toggle('hidden');
         });
+
+        // Function to clear the search input field after form submission
+        document.getElementById('search-form').addEventListener('submit', function() {
+            // Clear the search input field
+            document.getElementById('search-input').value = '';
+        });
+
 
         // Handle task completion toggle via AJAX and update task title style
         document.querySelectorAll('.toggle-checkbox').forEach(function(checkbox) {
@@ -249,22 +272,23 @@ button[name="delete_task"]:hover {
 
                 // Send the request to update the task status
                 fetch('update_task.php', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (!data.success) {
-                        console.error('Failed to update task');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (!data.success) {
+                            console.error('Failed to update task');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
             });
         });
     </script>
 
 
 </body>
+
 </html>
