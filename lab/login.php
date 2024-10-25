@@ -9,7 +9,7 @@ if (is_logged_in()) {
 }
 
 $error = '';
-$show_forgot_password = false; // Flag to show "Forgot your password?" link
+// $show_forgot_password = false; // Flag to show "Forgot your password?" link
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = sanitize_input($_POST['username']);
@@ -33,13 +33,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 redirect('dashboard.php');
             } else {
                 $error = "Invalid username or password.";
-                $show_forgot_password = true;  // Show "Forgot password" after wrong attempt
+                // $show_forgot_password = true;  // Show "Forgot password" after wrong attempt
             }
         } elseif ($user['account_activation_hash'] != null) {
             $error = "Please verify your account first.";
         } else {
             $error = "Invalid username or password.";
-            $show_forgot_password = true;  // Show "Forgot password" if the user doesn't exist or wrong credentials
+            // $show_forgot_password = true;  // Show "Forgot password" if the user doesn't exist or wrong credentials
         }
     }
 }
@@ -101,14 +101,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <a href="register.php" class="text-blue-600 hover:text-blue-800 hover:underline font-medium transition duration-200">Register</a>
         </p>
 
-        <?php if ($show_forgot_password): ?>
+        
         <p class="text-center">
             <a href="forgot_password.php" 
                class="text-blue-600 hover:text-blue-800 hover:underline font-medium transition duration-200">
                 Forgot your password?
             </a>
         </p>
-        <?php endif; ?>
     </div>
 
     <!-- Feature highlights -->
