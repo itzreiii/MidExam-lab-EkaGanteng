@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // END;
 
             $mail->Body = <<<END
-            Click <a href="http://localhost/webprog/webprog-lab/lab/activate-account.php?token=$activation_token">here</a> to activate your account.
+            Click <a href="http://localhost/webprog-lab/lab/activate-account.php?token=$activation_token">here</a> to activate your account.
             END;
 
             try {

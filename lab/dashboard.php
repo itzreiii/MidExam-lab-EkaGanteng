@@ -49,7 +49,46 @@ mysqli_stmt_bind_param($stmt, "i", $user_id);
 mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
 $todo_lists = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+// Initialize search parameter
+$search_term = isset($_GET['search']) ? trim(sanitize_input($_GET['search'])) : '';
+
+// Modify the query to include search
+$query = "SELECT l.*, 
+          (SELECT COUNT(*) FROM tasks t WHERE t.list_id = l.id) as task_count,
+          (SELECT COUNT(*) FROM tasks t WHERE t.list_id = l.id AND t.completed = 1) as completed_count
+          FROM todo_lists l 
+          WHERE l.user_id = ?";
+
+$params = [$user_id];
+$types = "i";
+
+// Add search condition if search term is provided
+if (!empty($search_term)) {
+    $query .= " AND l.title LIKE ?";
+    $params[] = "%{$search_term}%";
+    $types .= "s";
+}
+
+$query .= " ORDER BY l.created_at DESC";
+
+// Prepare and execute the query
+$stmt = mysqli_prepare($conn, $query);
+
+if ($stmt) {
+    mysqli_stmt_bind_param($stmt, $types, ...$params);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    $todo_lists = mysqli_fetch_all($result, MYSQLI_ASSOC);
+} else {
+    $todo_lists = [];
+    error_log("Failed to prepare statement: " . mysqli_error($conn));
+}
 ?>
+
+
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -115,6 +154,7 @@ $todo_lists = mysqli_fetch_all($result, MYSQLI_ASSOC);
             </div>
         <?php endif; ?>
 
+
         <!-- Create New List Form -->
         <div class="bg-white rounded-lg shadow-md p-6 mb-8">
             <h2 class="text-lg font-bold text-gray-900 mb-4">
@@ -133,6 +173,36 @@ $todo_lists = mysqli_fetch_all($result, MYSQLI_ASSOC);
                 </button>
             </form>
         </div>
+
+        <!-- Add Search Form -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-lg font-bold text-gray-900 mb-4">
+                <i class="fas fa-search text-blue-500 mr-2"></i>
+                Search Todo Lists
+            </h2>
+            <form method="GET" action="" class="flex flex-col sm:flex-row gap-4">
+                <input type="text" 
+                       name="search" 
+                       value="<?php echo htmlspecialchars($search_term); ?>"
+                       placeholder="Search todo lists..."
+                       class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-200"
+                >
+                <button type="submit"
+                        class="px-6 py-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-medium rounded-lg transition-all duration-200 transform hover:scale-105">
+                    <i class="fas fa-search mr-2"></i>
+                    Search
+                </button>
+                <?php if (!empty($search_term)): ?>
+                    <a href="<?php echo $_SERVER['PHP_SELF']; ?>" 
+                       class="px-6 py-2 bg-gray-500 hover:bg-gray-600 text-white font-medium rounded-lg transition-all duration-200 transform hover:scale-105">
+                        <i class="fas fa-times mr-2"></i>
+                        Clear
+                    </a>
+                <?php endif; ?>
+            </form>
+        </div>
+
+        
 
         <!-- Todo Lists Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -183,10 +253,18 @@ $todo_lists = mysqli_fetch_all($result, MYSQLI_ASSOC);
             <?php endforeach; ?>
         </div>
 
+
         <?php if (empty($todo_lists)): ?>
             <div class="text-center py-12">
                 <i class="fas fa-clipboard-list text-gray-400 text-5xl mb-4"></i>
-                <p class="text-gray-600">You don't have any todo lists yet. Create one to get started!</p>
+                <?php if (!empty($search_term)): ?>
+                    <p class="text-gray-600">No todo lists found matching your search "<?php echo htmlspecialchars($search_term); ?>"</p>
+                    <a href="<?php echo $_SERVER['PHP_SELF']; ?>" class="text-blue-500 hover:text-blue-700 mt-2 inline-block">
+                        <i class="fas fa-arrow-left mr-2"></i>Back to all lists
+                    </a>
+                <?php else: ?>
+                    <p class="text-gray-600">You don't have any todo lists yet. Create one to get started!</p>
+                <?php endif; ?>
             </div>
         <?php endif; ?>
     </main>
